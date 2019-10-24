@@ -1,0 +1,52 @@
+Game flow
+
+ON STARTUP - Title Screen
+
+Either create a new waifu(if you haven't already made 3)
+or visit one of your already-made waifus
+
+ON WAIFU CREATION - Creation screen
+
+1. Select type
+2. Give a name
+3. Select gender
+
+ON MAIN SCREEN
+
+(May return to titlescreen in order to pick another waifu to visit)
+
+Waifu may perform any of it's assigned actions at random and/or say something
+	- Dog licks
+	- Cat plays with yarn
+	- Shrine Maiden dances
+	- Yama gets mad
+
+Base affection @ MAX/2
+
+Positive interaction (No bulli)
+
+Headpat - +2 Aff
+Feed - +4 Aff
+Cuddle - +10 Aff
+
+Negative interactions (Bulli)
+
+Ignore - -4 Aff
+Punish - -8 Aff
+Smack - -12 Aff
+
+Addition factor(Add) = Math.floor((MAX/2)/3)
+if affection reaches MAX
+	R18 version required
+
+else if affection reaches 0
+	The waifu runs awei
+	remove from list
+
+else 
+	affection reaches MAX/2 + Add
+		Unlock outfit 1
+	affection reaches MAX/2 + Add * 2
+		Unlock outfit 2
+	affection reaches MAX/2 + Add * 3	
+		Unlock outfit 3
