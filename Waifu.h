@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "WaifuType.h"
-#include <string>
+#include <string.h>
 #include <iostream>
 
 using namespace sf;
@@ -10,7 +10,7 @@ using namespace std;
 
 class Waifu {
 private:
-	char sName[15];
+	String sName;
 	Sprite sImage;
 	string MiscDialogue[3];
 	string HappiDialogue[3];
@@ -22,18 +22,20 @@ private:
 			tUnlock2;
 
 	Vector2f vPos;
-
-public:
-
+	WaifuType Type;
 	int nAffection;
 
-	Waifu(char Name[15], Vector2f Pos, WaifuType WType) {
+public:
+	//Waifu Builder 1.0
+	Waifu(String Name, Vector2f Pos, WaifuType WType) {
 		//If it hits 0, Waifu runs away
 		//If it hits 100, Waifu is here to stay
 		//Outfits are unlocked also based on Waifu Affection level
 		nAffection = 20;
 
-		strcpy(sName, Name);
+		Type = WType;
+
+		sName = Name;
 		vPos = Pos;
 
 		//Sprite and dialogue loading depending on type of waifu chosen to be created
@@ -92,15 +94,15 @@ public:
 			AngeryDialogue[2] = "*whimpering*";
 		}
 		else if (WType == WaifuType::ShrineMaiden) {
-			if (!tDefault.loadFromFile("Assets\Reimu_character\\Reimu_1.png")) {
+			if (!tDefault.loadFromFile("Assets\\Reimu_character\\Reimu_1.png")) {
 				cout << "Failed to load Reimu_1";
 			}
 
-			if (!tUnlock1.loadFromFile("Assets\Reimu_character\\Reimu_3.png")) {
+			if (!tUnlock1.loadFromFile("Assets\\Reimu_character\\Reimu_3.png")) {
 				cout << "Failed to load Reimu_3";
 			}
 
-			if (!tUnlock2.loadFromFile("Assets\Reimu_character\\Reimu_4.png")) {
+			if (!tUnlock2.loadFromFile("Assets\\Reimu_character\\Reimu_4.png")) {
 				cout << "Failed to load Reimu_4";
 			}
 
@@ -111,21 +113,21 @@ public:
 			HappiDialogue[0] = "Thank you very much~";
 			HappiDialogue[1] = "Maybe I won't need donations anymore~";
 			HappiDialogue[2] = "*happiness chuckle*";
-
+				
 			AngeryDialogue[0] = "Seriously?";
 			AngeryDialogue[1] = "Heh, fairies can hit harder";
 			AngeryDialogue[2] = "If I hit back, You'd be on the other side of the world";
 		}
 		else if (WType == WaifuType::Yama) {
-			if (!tDefault.loadFromFile("Assets\Eiki_character\\Eiki_1.png")) {
+			if (!tDefault.loadFromFile("Assets\\Eiki_character\\Eiki_1.png")) {
 				cout << "Failed to load Eiki_1";
 			}
 
-			if (!tUnlock1.loadFromFile("Assets\Eiki_character\\Eiki_3.png")) {
+			if (!tUnlock1.loadFromFile("Assets\\Eiki_character\\Eiki_3.png")) {
 				cout << "Failed to load Eiki_3";
 			}
 
-			if (!tUnlock2.loadFromFile("Assets\Eiki_character\\Eiki_4.png")) {
+			if (!tUnlock2.loadFromFile("Assets\\Eiki_character\\Eiki_4.png")) {
 				cout << "Failed to load Eiki_4";
 			}
 
@@ -141,10 +143,13 @@ public:
 			AngeryDialogue[1] = "You sins continue to increase...";
 			AngeryDialogue[2] = "Judgement will be swift for you...";
 		}
+
+		sImage.setTexture(tDefault);
+		sImage.setPosition(vPos);
+		sImage.setScale(Vector2f(2, 2));
 	}
 
-	~Waifu() {
-	};
+	~Waifu() {};
 
 	//Getters
 	Vector2f getPos() {
@@ -153,6 +158,18 @@ public:
 
 	String getName() {
 		return sName;
+	}
+
+	Sprite getWaifu() {
+		return sImage;
+	}
+
+	WaifuType getType() {
+		return Type;
+	}
+
+	int getAffection() {
+		return nAffection;
 	}
 
 	//Setters
@@ -176,6 +193,28 @@ public:
 	}
 
 	//General use functions
+	void addAffection(int affect) {
+		if (nAffection += affect < 101) {
+			nAffection += affect;
+		}
+		
+		else if(nAffection += affect > 100){
+			nAffection = 100;
+		}
+
+		else if (nAffection -= affect > 0) {
+			nAffection -= affect;
+		}
+
+		else if (nAffection -= affect < 0) {
+			nAffection = 0;
+		}
+
+		else {
+			cout << "What even is math anyways?";
+		}
+	}
+
 	void Speak() {
 
 	}

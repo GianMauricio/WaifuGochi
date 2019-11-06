@@ -1,6 +1,9 @@
 #pragma once
+#include <string.h>
 #include "WaifuType.h"
 #include "Gender.h"
+
+using namespace std;
 
 class WaifuData {
 private:
@@ -12,7 +15,7 @@ private:
 public:
 	WaifuData(char name[], Gender gender, WaifuType newType) {
 		//Copy Name
-		strcpy(name, sName);
+		strcpy_s(sName, name);
 
 		//Set elements
 		Sex = gender;
