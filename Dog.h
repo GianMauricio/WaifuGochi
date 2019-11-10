@@ -1,60 +1,45 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include "Waifu.h"
 #pragma once
 
 using namespace sf;
 using namespace std;
 
-class Dog {
-private:
-	Sprite sImage;
-
-	//Set to sprite when the user chooses to change outfit of Waifu
-	Texture tDefault;
-
-	Vector2f vPos;
-
+class Dog : public Waifu {
 public:
-	Dog(char Name[15], Vector2f Pos) {
-		//If it hits 0, Waifu runs away
-		//If it hits 100, Waifu is here to stay
-		//Outfits are unlocked also based on Waifu Affection level
-		vPos = Pos;
-
+	Dog(String Name, Vector2f Pos) : Waifu(Name, Pos){
 		//Set up assets lists
 		if (!tDefault.loadFromFile("Assets\\Kyouko_character\\Kyouko_1.png")) {
-			cout << "Failed to load image";
+			cout << "Failed to load doggo";
 		}
 
-		//Set sprite image to default
-		sImage.setTexture(tDefault);
+		if (!tUnlock1.loadFromFile("Assets\\Kyouko_character\\Kyouko_1.png")) {
+			cout << "Failed to load doggo";
+		}
+
+		if (!tUnlock2.loadFromFile("Assets\\Kyouko_character\\Kyouko_1.png")) {
+			cout << "Failed to load doggo";
+		}
+
+		MiscDialogue[0] = "*sniffing*";
+		MiscDialogue[1] = "*sweeping outside*";
+		MiscDialogue[2] = "Master Byakuren would like this place";
+
+		HappiDialogue[0] = "*licking you*";
+		HappiDialogue[1] = "*happiness woof*";
+		HappiDialogue[2] = "*happi smile*";
+
+		AngeryDialogue[0] = "*growl*";
+		AngeryDialogue[1] = "*lying down*";
+		AngeryDialogue[2] = "*whimpering*";
+
+		//Set own type
+		Type = WaifuType::Dog;
 	}
 
 	~Dog() {};
-
-	//Getters
-	Vector2f getPos() {
-		return vPos;
-	}
-
-	//Setters
-	void setOutfit(int OutfitNumber) {
-		switch (OutfitNumber)
-		{
-		case 1:
-			sImage.setTexture(tDefault);
-			break;
-
-		default:
-			cout << "Outfit missing";
-			break;
-		}
-	}
-
-	void setPos(Vector2f newPos) {
-		vPos = newPos;
-	}
 
 	//General use functions
 	void Speak() {

@@ -1,80 +1,45 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include "Waifu.h"
 #pragma once
 
 using namespace sf;
 using namespace std;
 
-class Yama {
-private:
-	Sprite sImage;
-
-	//Set to sprite when the user chooses to change outfit of Waifu
-	Texture tDefault,
-		tUnlock1,
-		tUnlock2,
-		tUnlock3;
-
-	Vector2f vPos;
-
+class Yama : public Waifu{
 public:
-	Yama(char Name[15], Vector2f Pos) {
-		//If it hits 0, Waifu runs away
-		//If it hits 100, Waifu is here to stay
-		//Outfits are unlocked also based on Waifu Affection level
-		vPos = Pos;
-
+	Yama(String Name, Vector2f Pos) : Waifu(Name, Pos){
 		//Set up assets lists
 		if (!tDefault.loadFromFile("Assets\\Eiki_character\\Eiki_1.png")) {
-			cout << "Failed to load image";
+			cout << "Failed to load Eiki_1";
 		}
 
-		if (!tUnlock1.loadFromFile("Assets\\Eiki_character\\Eiki_2.png")) {
-			cout << "Failed to load image";
+		if (!tUnlock1.loadFromFile("Assets\\Eiki_character\\Eiki_3.png")) {
+			cout << "Failed to load Eiki_3";
 		}
 
-		if (!tUnlock2.loadFromFile("Assets\\Eiki_character\\Eiki_3.png")) {
-			cout << "Failed to load image";
+		if (!tUnlock2.loadFromFile("Assets\\Eiki_character\\Eiki_4.png")) {
+			cout << "Failed to load Eiki_4";
 		}
 
-		if (!tUnlock3.loadFromFile("Assets\\Eiki_character\\Eiki_4.png")) {
-			cout << "Failed to load image";
-		}
+		MiscDialogue[0] = "*sitting silently*";
+		MiscDialogue[1] = "Are you atoning for your sins?";
+		MiscDialogue[2] = "*sips tea*";
 
-		//Set sprite image to default
-		sImage.setTexture(tDefault);
+		HappiDialogue[0] = "Th-this won't excempt you from judgement...";
+		HappiDialogue[1] = "I may be the Yama, but...";
+		HappiDialogue[2] = "I guess this is okay every once and a while...";
+
+		AngeryDialogue[0] = "How dare you?!";
+		AngeryDialogue[1] = "You sins continue to increase...";
+		AngeryDialogue[2] = "Judgement will be swift for you...";
+
+		//Set own type
+		Type = WaifuType::Yama;
 	}
 
 	~Yama() {};
-
-	//Getters
-	Vector2f getPos() {
-		return vPos;
-	}
-
-	//Setters
-	void setOutfit(int OutfitNumber) {
-		switch (OutfitNumber)
-		{
-		case 1:
-			sImage.setTexture(tDefault);
-			break;
-		case 2:
-			sImage.setTexture(tUnlock1);
-			break;
-		case 3:
-			sImage.setTexture(tUnlock2);
-			break;
-		case 4:
-			sImage.setTexture(tUnlock3);
-			break;
-		}
-	}
-
-	void setPos(Vector2f newPos) {
-		vPos = newPos;
-	}
 
 	//General use functions
 	void Speak() {
