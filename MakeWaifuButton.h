@@ -115,10 +115,6 @@ public:
 	~MakeWaifuButton(){}
 
 	//Getters
-	FloatRect getShape() {
-		return sImage.getGlobalBounds();
-	}
-
 	Vector2f getPos() {
 		return vInactivePos;
 	}
