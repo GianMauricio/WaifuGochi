@@ -70,8 +70,7 @@ public:
 
 	//Setters
 	void setOutfit(int OutfitNumber) {
-		switch (OutfitNumber)
-		{
+		switch (OutfitNumber){
 		case 1:
 			sImage.setTexture(tDefault);
 			break;
@@ -90,25 +89,18 @@ public:
 
 	//General use functions
 	void addAffection(int affect) {
-		if (nAffection += affect < 101) {
-			nAffection += affect;
-		}
+
+		nAffection += affect;
 		
-		else if(nAffection += affect > 100){
+		if(nAffection > 100){
 			nAffection = 100;
 		}
 
-		else if (nAffection -= affect > 0) {
-			nAffection -= affect;
-		}
-
-		else if (nAffection -= affect < 0) {
+		else if (nAffection  < 0) {
 			nAffection = 0;
 		}
 
-		else {
-			cout << "What even is math anyways?";
-		}
+		cout << "New affection: " << nAffection;
 	}
 
 	//Functions to be defined later

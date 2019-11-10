@@ -2,8 +2,10 @@
 #include <iostream>
 #include "GameState.h"
 #include "MakeWaifuButton.h"
+#include "BasicButton.h"
 #include "Waifu.h"
 #include "WaifuSelector.h"
+#include "BasicButton.h"
 
 using namespace sf;
 using namespace std;
@@ -24,11 +26,6 @@ int main()
 			FGGame;
 	sBG.setScale(Vector2f(2, 2));
 	sFG.setScale(Vector2f(2, 2));
-
-	//Additional 
-
-	//Check system directory
-	//system("dir");
 
 	//Load stuff
 	if (!BGGame.loadFromFile("Assets\\Screens\\Background_1.png"))
@@ -56,12 +53,27 @@ int main()
 		  *Waifu2 = nullptr,
 		  *Waifu3 = nullptr;
 
+	//Ready buttons for waifu interaction
+	Button HeadPat = Button(290, 655, "Headpat +2");
+	Button Feed = Button(410, 655, "Feed +4");
+	Button Cuddle = Button(530, 655, "Cuddle +10");
+	Button Ignore = Button(290, 715, "Ignore -4");
+	Button Punish = Button(410, 715, "Punish -8");
+	Button Smack = Button(530, 715, "Smack -12");
+
+	HeadPat.setScale(0.70, 1.5);
+	Feed.setScale(0.70, 1.5);
+	Cuddle.setScale(0.70, 1.5);
+	Ignore.setScale(0.70, 1.5);
+	Punish.setScale(0.70, 1.5);
+	Smack.setScale(0.70, 1.5);
+
 	while (window.isOpen())
 	{
 		//Clear last window state
 		window.clear();
 
-		//Event tracker
+		//Event listener
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -69,60 +81,151 @@ int main()
 				window.close();
 
 			if (event.type == Event::MouseButtonPressed) {
-				if (Save1.vectorCheck(Mouse::getPosition(window)) && State == GameState::Menu) {
-					//Set game mode to selection depending on the state of the save
-					if (Save1.getType() == ButtonType::New) {
-						State = GameState::MakingWaifu1;
+				if (State == GameState::Menu) {
+					if (Save1.vectorCheck(Mouse::getPosition(window))) {
+						//Set game mode to selection depending on the state of the save
+						if (Save1.getType() == ButtonType::New) {
+							State = GameState::MakingWaifu1;
+						}
+
+						else {
+							State = GameState::Waifu1;
+						}
 					}
-					
-					else {
-						State = GameState::Waifu1;
+
+					if (Save2.vectorCheck(Mouse::getPosition(window))) {
+						//Set game mode to selection depending on the state of the save
+						if (Save2.getType() == ButtonType::New) {
+							State = GameState::MakingWaifu2;
+						}
+
+						else {
+							State = GameState::Waifu2;
+						}
+					}
+
+					if (Save3.vectorCheck(Mouse::getPosition(window))) {
+						//Set game mode to selection depending on the state of the save
+						if (Save3.getType() == ButtonType::New) {
+							State = GameState::MakingWaifu3;
+						}
+
+						else {
+							State = GameState::Waifu3;
+						}
+					}
+				}
+				
+				if (State == GameState::MakingWaifu1 ||
+					State == GameState::MakingWaifu2 ||
+					State == GameState::MakingWaifu3) {
+
+					if (Selector.vectorCheck(Mouse::getPosition(window))){
+						cout << "Generating Waifu";
+						switch (State) {
+						case GameState::MakingWaifu1:
+							Waifu1 = new Waifu(Selector.GenerateWaifu());
+							State = GameState::Waifu1;
+							break;
+
+						case GameState::MakingWaifu2:
+							Waifu2 = new Waifu(Selector.GenerateWaifu());
+							State = GameState::Waifu2;
+							break;
+
+						case GameState::MakingWaifu3:
+							Waifu3 = new Waifu(Selector.GenerateWaifu());
+							State = GameState::Waifu3;
+							break;
+						}
+
 					}
 				}
 
-				if (Save2.vectorCheck(Mouse::getPosition(window)) && State == GameState::Menu) {
-					//Set game mode to selection depending on the state of the save
-					if (Save2.getType() == ButtonType::New) {
-						State = GameState::MakingWaifu2;
-					}
+				if (State == GameState::Waifu1 ||
+					State == GameState::Waifu2 ||
+					State == GameState::Waifu3) {
 
-					else {
-						State = GameState::Waifu2;
-					}
-				}
-
-				if (Save3.vectorCheck(Mouse::getPosition(window)) && State == GameState::Menu) {
-					//Set game mode to selection depending on the state of the save
-					if (Save3.getType() == ButtonType::New) {
-						State = GameState::MakingWaifu3;
-					}
-
-					else {
-						State = GameState::Waifu3;
-					}
-				}
-
-				if (Selector.vectorCheck(Mouse::getPosition(window)) && (State == GameState::MakingWaifu1 || 
-					State == GameState::MakingWaifu2 || 
-					State == GameState::MakingWaifu3)) {
-					cout << "Generating Waifu";
+					//Compute for affection changes to current waifu
 					switch (State) {
-					case GameState::MakingWaifu1:
-						Waifu1 = new Waifu(Selector.GenerateWaifu());
-						State = GameState::Waifu1;
+					case GameState::Waifu1:
+						if (HeadPat.vectorCheck(Mouse::getPosition(window))){
+							Waifu1->addAffection(2);
+						}
+
+						else if (Feed.vectorCheck(Mouse::getPosition(window))) {
+							Waifu1->addAffection(4);
+						}
+
+						else if (Cuddle.vectorCheck(Mouse::getPosition(window))) {
+							Waifu1->addAffection(10);
+						}
+
+						else if (Ignore.vectorCheck(Mouse::getPosition(window))){
+							Waifu1->addAffection(-4);
+						}
+
+						else if (Punish.vectorCheck(Mouse::getPosition(window))) {
+							Waifu1->addAffection(-8);
+						}
+
+						else if (Smack.vectorCheck(Mouse::getPosition(window))) {
+							Waifu1->addAffection(-12);
+						}
 						break;
 
-					case GameState::MakingWaifu2:
-						Waifu2 = new Waifu(Selector.GenerateWaifu());
-						State = GameState::Waifu2;
+					case GameState::Waifu2:
+						if (HeadPat.vectorCheck(Mouse::getPosition(window))) {
+							Waifu2->addAffection(2);
+						}
+
+						else if (Feed.vectorCheck(Mouse::getPosition(window))) {
+							Waifu2->addAffection(4);
+						}
+
+						else if (Cuddle.vectorCheck(Mouse::getPosition(window))) {
+							Waifu2->addAffection(10);
+						}
+
+						else if (Ignore.vectorCheck(Mouse::getPosition(window))) {
+							Waifu2->addAffection(-4);
+						}
+
+						else if (Punish.vectorCheck(Mouse::getPosition(window))) {
+							Waifu2->addAffection(-8);
+						}
+
+						else if (Smack.vectorCheck(Mouse::getPosition(window))) {
+							Waifu2->addAffection(-12);
+						}
 						break;
 
-					case GameState::MakingWaifu3:
-						Waifu3 = new Waifu(Selector.GenerateWaifu());
-						State = GameState::Waifu3;
+					case GameState::Waifu3:
+						if (HeadPat.vectorCheck(Mouse::getPosition(window))) {
+							Waifu3->addAffection(2);
+						}
+
+						else if (Feed.vectorCheck(Mouse::getPosition(window))) {
+							Waifu3->addAffection(4);
+						}
+
+						else if (Cuddle.vectorCheck(Mouse::getPosition(window))) {
+							Waifu3->addAffection(10);
+						}
+
+						else if (Ignore.vectorCheck(Mouse::getPosition(window))) {
+							Waifu3->addAffection(-4);
+						}
+
+						else if (Punish.vectorCheck(Mouse::getPosition(window))) {
+							Waifu3->addAffection(-8);
+						}
+
+						else if (Smack.vectorCheck(Mouse::getPosition(window))) {
+							Waifu3->addAffection(-12);
+						}
 						break;
 					}
-
 				}
 			}
 
@@ -219,6 +322,21 @@ int main()
 			window.draw(Waifu1->getWaifu());
 
 			//Draw Waifu Buttons
+			//Love
+			window.draw(HeadPat.getBG());
+			window.draw(HeadPat.getTitle());
+			window.draw(Feed.getBG());
+			window.draw(Feed.getTitle());
+			window.draw(Cuddle.getBG());
+			window.draw(Cuddle.getTitle());
+
+			//Hate
+			window.draw(Ignore.getBG());
+			window.draw(Ignore.getTitle());
+			window.draw(Punish.getBG());
+			window.draw(Punish.getTitle());
+			window.draw(Smack.getBG());
+			window.draw(Smack.getTitle());
 		}
 
 		else if (State == GameState::Waifu2) {
@@ -232,6 +350,21 @@ int main()
 			window.draw(Waifu2->getWaifu());
 
 			//Draw Waifu Buttons
+			//Love
+			window.draw(HeadPat.getBG());
+			window.draw(HeadPat.getTitle());
+			window.draw(Feed.getBG());
+			window.draw(Feed.getTitle());
+			window.draw(Cuddle.getBG());
+			window.draw(Cuddle.getTitle());
+
+			//Hate
+			window.draw(Ignore.getBG());
+			window.draw(Ignore.getTitle());
+			window.draw(Punish.getBG());
+			window.draw(Punish.getTitle());
+			window.draw(Smack.getBG());
+			window.draw(Smack.getTitle());
 		}
 
 		else if (State == GameState::Waifu3) {
@@ -245,6 +378,21 @@ int main()
 			window.draw(Waifu3->getWaifu());
 
 			//Draw Waifu Buttons
+			//Love
+			window.draw(HeadPat.getBG());
+			window.draw(HeadPat.getTitle());
+			window.draw(Feed.getBG());
+			window.draw(Feed.getTitle());
+			window.draw(Cuddle.getBG());
+			window.draw(Cuddle.getTitle());
+
+			//Hate
+			window.draw(Ignore.getBG());
+			window.draw(Ignore.getTitle());
+			window.draw(Punish.getBG());
+			window.draw(Punish.getTitle());
+			window.draw(Smack.getBG());
+			window.draw(Smack.getTitle());
 		}
 
 		//Display new window
