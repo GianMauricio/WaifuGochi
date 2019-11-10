@@ -4,6 +4,10 @@
 #include <sstream>
 #include <string>
 #include "WaifuType.h"
+#include "Neko.h"
+#include "Dog.h"
+#include "ShrineMaiden.h"
+#include "Yama.h"
 
 using namespace std;
 using namespace sf;
@@ -96,7 +100,7 @@ public:
 
 		//Load font
 		if (!dFont.loadFromFile("Assets\\Interface\\Minecraft.ttf")) {
-			cout << "Failed to laod font";
+			cout << "Failed to load font";
 		}
 
 		//Set textures to sprites
@@ -333,7 +337,6 @@ public:
 
 		if (sConfirm.getGlobalBounds().contains(Vector2f(click.x, click.y))) {
 			cout << "Waifu is done";
-
 			return true;
 		}
 
@@ -352,8 +355,28 @@ public:
 	Waifu GenerateWaifu() {
 		if (Type != WaifuType::New){
 			cout << "Waifu ready";
-			Vector2f WaifuPos = vPos;
-			return Waifu(sName, WaifuPos, Type);
+			Vector2f WaifuPos;
+
+			if (Type == WaifuType::Neko) {
+				WaifuPos = Vector2f(300, 80);
+				return Neko(sName, WaifuPos);
+			}
+				
+			else if (Type == WaifuType::Dog) {
+				WaifuPos = Vector2f(300, 80);
+				return Dog(sName, WaifuPos);
+			}
+				
+			else if (Type == WaifuType::ShrineMaiden) {
+				WaifuPos = Vector2f(350, 80);
+				return ShrineMaiden(sName, WaifuPos);
+			}
+				
+			else if (Type == WaifuType::Yama) {
+				WaifuPos = Vector2f(350, 80);
+				return Yama(sName, WaifuPos);
+			}
+				
 		}
 	}
 };

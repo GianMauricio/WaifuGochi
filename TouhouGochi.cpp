@@ -61,6 +61,7 @@ int main()
 		//Clear last window state
 		window.clear();
 
+		//Event tracker
 		Event event;
 		while (window.pollEvent(event))
 		{
@@ -68,24 +69,43 @@ int main()
 				window.close();
 
 			if (event.type == Event::MouseButtonPressed) {
-				if (Save1.vectorCheck(Mouse::getPosition(window))) {
-					//Set game mode to selection
-					State = GameState::MakingWaifu1;
+				if (Save1.vectorCheck(Mouse::getPosition(window)) && State == GameState::Menu) {
+					//Set game mode to selection depending on the state of the save
+					if (Save1.getType() == ButtonType::New) {
+						State = GameState::MakingWaifu1;
+					}
+					
+					else {
+						State = GameState::Waifu1;
+					}
 				}
 
-				if (Save2.vectorCheck(Mouse::getPosition(window))) {
-					//Set up button to resume waifu instead of creating a new one
-					State = GameState::MakingWaifu2;
+				if (Save2.vectorCheck(Mouse::getPosition(window)) && State == GameState::Menu) {
+					//Set game mode to selection depending on the state of the save
+					if (Save2.getType() == ButtonType::New) {
+						State = GameState::MakingWaifu2;
+					}
+
+					else {
+						State = GameState::Waifu2;
+					}
 				}
 
-				if (Save3.vectorCheck(Mouse::getPosition(window))) {
-					//Set up button to resume waifu instead of creating a new one
-					State = GameState::MakingWaifu3;
+				if (Save3.vectorCheck(Mouse::getPosition(window)) && State == GameState::Menu) {
+					//Set game mode to selection depending on the state of the save
+					if (Save3.getType() == ButtonType::New) {
+						State = GameState::MakingWaifu3;
+					}
+
+					else {
+						State = GameState::Waifu3;
+					}
 				}
 
-				if (Selector.vectorCheck(Mouse::getPosition(window))) {
+				if (Selector.vectorCheck(Mouse::getPosition(window)) && (State == GameState::MakingWaifu1 || 
+					State == GameState::MakingWaifu2 || 
+					State == GameState::MakingWaifu3)) {
 					cout << "Generating Waifu";
-
 					switch (State) {
 					case GameState::MakingWaifu1:
 						Waifu1 = new Waifu(Selector.GenerateWaifu());
@@ -106,7 +126,9 @@ int main()
 				}
 			}
 
-			if (event.type == Event::TextEntered) {
+			if (event.type == Event::TextEntered && (State == GameState::MakingWaifu1 ||
+				State == GameState::MakingWaifu2 ||
+				State == GameState::MakingWaifu3)) {
 				if (event.text.unicode == '\b') {
 					Selector.deleteName();
 				}
@@ -117,18 +139,26 @@ int main()
 			}
 		}
 
-		//Display objects depending on what game state is curretnly active
+		//Display objects depending on what game state is curretnly active (Consider moving to switch)
 		//Menu
 		if (State == GameState::Menu) {
 			//Draw menu background
 			sBG.setTexture(BGMenu);
 			window.draw(sBG);
-			window.draw(Save1.getImageSprite());
-			window.draw(Save1.getWaifuSprite());
-			window.draw(Save2.getImageSprite());
-			window.draw(Save2.getWaifuSprite());
-			window.draw(Save3.getImageSprite());
-			window.draw(Save3.getWaifuSprite());
+			for (int i = 0; i < Save1.getImageCount(); i++) {
+				window.draw(Save1.getImage(i));
+				window.draw(Save1.getText(i));
+			}
+			
+			for (int i = 0; i < Save2.getImageCount(); i++) {
+				window.draw(Save2.getImage(i));
+				window.draw(Save2.getText(i));
+			}
+
+			for (int i = 0; i < Save3.getImageCount(); i++) {
+				window.draw(Save3.getImage(i));
+				window.draw(Save3.getText(i));
+			}
 		}
 
 		//Making Waifu
@@ -177,6 +207,7 @@ int main()
 			}
 		}
 
+		//Playing with Waifu
 		else if (State == GameState::Waifu1) {
 			//Draw game background
 			sBG.setTexture(BGGame);
@@ -186,6 +217,8 @@ int main()
 
 			//Draw Waifu
 			window.draw(Waifu1->getWaifu());
+
+			//Draw Waifu Buttons
 		}
 
 		else if (State == GameState::Waifu2) {
@@ -197,6 +230,8 @@ int main()
 
 			//Draw Waifu
 			window.draw(Waifu2->getWaifu());
+
+			//Draw Waifu Buttons
 		}
 
 		else if (State == GameState::Waifu3) {
@@ -208,6 +243,8 @@ int main()
 
 			//Draw Waifu
 			window.draw(Waifu3->getWaifu());
+
+			//Draw Waifu Buttons
 		}
 
 		//Display new window
