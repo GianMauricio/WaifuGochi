@@ -4,10 +4,6 @@
 #include <sstream>
 #include <string>
 #include "WaifuType.h"
-#include "Neko.h"
-#include "Dog.h"
-#include "ShrineMaiden.h"
-#include "Yama.h"
 
 using namespace std;
 using namespace sf;
@@ -24,6 +20,8 @@ private:
 			tYama;
 		
 	Vector2f vPos;
+	//*Declaration here
+	Vector2f WPos;
 	Sprite sSelectorBox;
 
 	Vector2f vNamePos;
@@ -70,37 +68,40 @@ private:
 	WaifuType Type;
 
 public:
-	WaifuPicker(int xPos, int yPos) {
+	//Added separate argument for waifu sprite rendering position*
+	WaifuPicker(int xPos, int yPos, int x2, int y2) {
 		vPos.x = xPos;
 		vPos.y = yPos;
+		WPos.x = x2;
+		WPos.y = y2;
 		Name = " ";
 		Type = WaifuType::New;
 
 		//Load waifus
 		if (!tDog.loadFromFile("Assets\\Titlescreen sprites\\KyoukoSprite.png")) {
-			cout << "Failed to load Menu Sprite: Dog";
+			cout << "Failed to load Menu Sprite: Dog" << endl;
 		}
 
 		if (!tNeko.loadFromFile("Assets\\Titlescreen sprites\\ChenSprite.png")) {
-			cout << "Failed to load Menu Sprite: Neko";
+			cout << "Failed to load Menu Sprite: Neko" << endl;
 		}
 
 		if (!tShrineMaiden.loadFromFile("Assets\\Titlescreen sprites\\ReimuSprite.png")) {
-			cout << "Failed to load Menu Sprite: ShrineMaiden";
+			cout << "Failed to load Menu Sprite: ShrineMaiden" << endl;
 		}
 
 		if (!tYama.loadFromFile("Assets\\Titlescreen sprites\\EikiSprite.png")) {
-			cout << "Failed to load Menu Sprite: Ogre";
+			cout << "Failed to load Menu Sprite: Yama" << endl;
 		}
 
 		//Load selector boxes
 		if (!tBG.loadFromFile("Assets\\Interface\\Selector.png")) {
-			cout << "Faled to load selector box BG";
+			cout << "Faled to load selector box BG" << endl;
 		}
 
 		//Load font
 		if (!dFont.loadFromFile("Assets\\Interface\\Minecraft.ttf")) {
-			cout << "Failed to load font";
+			cout << "Failed to load font" << endl;
 		}
 
 		//Set textures to sprites
@@ -246,7 +247,7 @@ public:
 			break;
 
 		default:
-			cout << "Element does not exist";
+			cout << "Element does not exist" << endl;
 			break;
 		}
 	}
@@ -271,7 +272,7 @@ public:
 			break;
 
 		default:
-			cout << "Element does not exist";
+			cout << "Element does not exist" << endl;
 			break;
 		}
 	}
@@ -308,35 +309,36 @@ public:
 	//General use functions
 	bool vectorCheck(Vector2i click) {
 		if (sDog.getGlobalBounds().contains(Vector2f(click.x, click.y))) {
-			cout << "Dog";
+			cout << "Dog" << endl;
 			Type = WaifuType::Dog;
 			tPrompt1.setString("You picked a Dog Girl!");
 			tPrompt1.setPosition(vPromptDog);
 		}
 
 		else if (sNeko.getGlobalBounds().contains(Vector2f(click.x, click.y))) {
-			cout << "Neko";
+			cout << "Neko" << endl;
 			Type = WaifuType::Neko;
 			tPrompt1.setString("You picked a Cat Girl!");
 			tPrompt1.setPosition(vPromptNeko);
 		}
 
 		else if (sShrineMaiden.getGlobalBounds().contains(Vector2f(click.x, click.y))) {
-			cout << "ShrineMaiden";
+			cout << "ShrineMaiden" << endl;
 			Type = WaifuType::ShrineMaiden;
 			tPrompt1.setString("You picked a Shrine Maiden!");
 			tPrompt1.setPosition(vPromptShrineMaiden);
 		}
 
 		else if (sYama.getGlobalBounds().contains(Vector2f(click.x, click.y))) {
-			cout << "Yama";
+			cout << "Yama" << endl;
 			Type = WaifuType::Yama;
 			tPrompt1.setString("You picked an Orge!");
 			tPrompt1.setPosition(vPromptYama);
 		}
 
 		if (sConfirm.getGlobalBounds().contains(Vector2f(click.x, click.y))) {
-			cout << "Waifu is done";
+			cout << "Waifu is done" << endl;
+
 			return true;
 		}
 
@@ -354,29 +356,9 @@ public:
 	//Creates the waifu depending on the current data 
 	Waifu GenerateWaifu() {
 		if (Type != WaifuType::New){
-			cout << "Waifu ready";
-			Vector2f WaifuPos;
-
-			if (Type == WaifuType::Neko) {
-				WaifuPos = Vector2f(300, 80);
-				return Neko(sName, WaifuPos);
-			}
-				
-			else if (Type == WaifuType::Dog) {
-				WaifuPos = Vector2f(300, 80);
-				return Dog(sName, WaifuPos);
-			}
-				
-			else if (Type == WaifuType::ShrineMaiden) {
-				WaifuPos = Vector2f(350, 80);
-				return ShrineMaiden(sName, WaifuPos);
-			}
-				
-			else if (Type == WaifuType::Yama) {
-				WaifuPos = Vector2f(350, 80);
-				return Yama(sName, WaifuPos);
-			}
-				
+			cout << "Waifu ready" << endl;
+			Vector2f WaifuPos = WPos;
+			return Waifu(sName, WaifuPos, Type);
 		}
 	}
 };
